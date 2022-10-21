@@ -1,12 +1,12 @@
 import Titulo from "./Titulo";
 
 const Lista = (props) => {
-    console.log('Titulo:', props.title);
-    console.log('Items:', props.items);
 
     return (
         <>
             <Titulo title={props.title} />
+
+            {props.children}
             
             <ul style={{ fontSize: 14, color: 'red' }}>
                 {props.items.map((item, index) => (
