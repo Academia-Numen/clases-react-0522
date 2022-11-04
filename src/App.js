@@ -1,83 +1,62 @@
-import Lista from "./components/Lista";
+import { useState } from "react";
+import InputText from "./components/InputText";
+
+const possibleCauses = [
+  { label: 'Arreglo de Luminaria', value: 'Arreglo de Luminaria' },
+  { label: 'Mantenimiento Espacios Públicos', value: 'Mantenimiento Espacios Públicos' },
+  { label: 'Poda y corta de Pasto', value: 'Poda y corta de Pasto' },
+  { label: 'Pavimento', value: 'Pavimento' },
+  { label: 'Senda Peatonal', value: 'Senda Peatonal' },
+];
 
 function App() {
+  const [name, setName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [cause, setCause] = useState('');
+  const [hasFines, setHasFines] = useState(false);
 
-  // PROX CLASE: Formulario de Reclamo
-
-  const electrodomesticos = [
-    { nombre: 'Heladera', precio: 200000, color: 'Blanca' },
-    { nombre: 'Lavarropas', precio: 80000, color: 'Blanco' },
-    { nombre: 'Freezer', precio: 120000, color: 'Gris' },
-    { nombre: 'Microondas', precio: 50000, color: 'Negro' },
-    { nombre: 'Cocina', precio: 75000, color: 'Negro' },
-    { nombre: 'Cocina x', precio: 75000, color: 'Negro' },
-  ];
-
-  const eventHandler = (event) => {
-    console.log('Evento', event);
-    console.log('Target', event.target);
-  }
-
-  const submitHandler = (e) => {
+  const sendForm = (e) => {
     e.preventDefault();
-    console.log(e);
-  }
-
-  const flexStyles = {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  }
-
-  const styles = {
-    div1: {
-      ...flexStyles,
-      backgroundColor: 'red',
-      width: 400,
-      height: 400,
-    }, 
-    div2: {
-      ...flexStyles,
-      backgroundColor: 'yellow',
-      width: 300,
-      height: 300,
-    },
-    div3: {
-      ...flexStyles,
-      backgroundColor: 'blue',
-      width: 200,
-      height: 200,
+    const datos = {
+      nombre: name,
+      apellido: lastName,
+      causa: cause,
+      otro: `El usuario ${hasFines ? '' : 'no'} tiene multas`
     }
-  }
-
-  function cambiarFondo(e) {
-    e.target.style.background = 'green'
-  }
-
-  function detenerLaPropagacion(e) {
-    e.stopPropagation();
+    console.log('Enviar datos al Backend', datos);
   }
 
   return (
-    <>
-      <div style={styles.div1} onClick={cambiarFondo}>
-        <div style={styles.div2} onClick={detenerLaPropagacion}>
-          <div style={styles.div3}>
-            <button>Press</button>
-          </div>
-        </div>
-      </div>
+    <form onSubmit={sendForm}>
+      <InputText
+        value={name}
+        changeHandler={(e) => setName(e.target.value)}
+        label="Nombre: "
+        name="name"
+      />
 
-      <form onSubmit={submitHandler}>
-        <input type="text" />
-        <input type="submit" value="Enviar" />
-      </form>
+      <InputText
+        value={lastName}
+        changeHandler={(e) => setLastName(e.target.value)}
+        label="Apellido: "
+        name="last-name"
+      />
 
-      <button onClick={eventHandler}>Presione</button>
-      <Lista items={electrodomesticos} title="Lista de Electrodomésticos">
-        <h2>CHILDREN</h2>
-      </Lista>
-    </>
+      <label htmlFor="cause">Motivo del Reclamo: </label>
+      <select name="cause" defaultValue="" onChange={(e) => setCause(e.target.value)}>
+        <option disabled value="">Eliga una causa: </option>
+        {possibleCauses.map((item, index) => (
+          <option key={index} value={item.value}>
+            {item.label}
+          </option>
+        ))}
+      </select>
+
+      <label htmlFor="fines">¿Posee multas?: </label>
+      <input type="checkbox" name="fines" value={hasFines} onChange={e => setHasFines(!hasFines)} />
+
+      <input type='submit' value="Enviar" />
+    </form>
   );
 }
 
