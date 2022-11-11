@@ -10,6 +10,7 @@ const Checkbox = (props) => {
                 type="checkbox" 
                 name={name} 
                 value={value} 
+                checked={value}
                 onChange={changeHandler} 
             />
         </div>        

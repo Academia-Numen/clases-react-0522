@@ -1,62 +1,125 @@
+import { faCircleExclamation, faSpinner } from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
+import { useEffect } from "react";
 import { useState } from "react";
+import Checkbox from "./components/Checkbox";
+import Form from "./components/Form";
+import Icon from "./components/Icon";
 import InputText from "./components/InputText";
+import Select from "./components/Select";
+import SubmitButton from "./components/SubmitButton";
+import possibleCauses from "./data";
 
-const possibleCauses = [
-  { label: 'Arreglo de Luminaria', value: 'Arreglo de Luminaria' },
-  { label: 'Mantenimiento Espacios Públicos', value: 'Mantenimiento Espacios Públicos' },
-  { label: 'Poda y corta de Pasto', value: 'Poda y corta de Pasto' },
-  { label: 'Pavimento', value: 'Pavimento' },
-  { label: 'Senda Peatonal', value: 'Senda Peatonal' },
-];
+const BASE_URL = 'http://localhost:8000';
+
+const errorInitialState = { isError: false, message: '' };
 
 function App() {
   const [name, setName] = useState('');
   const [lastName, setLastName] = useState('');
   const [cause, setCause] = useState('');
   const [hasFines, setHasFines] = useState(false);
+  const [error, setError] = useState(errorInitialState);
+  const [isLoading, setIsLoading] = useState(false);
+  const [refetch, setRefetch] = useState(false);
 
-  const sendForm = (e) => {
-    e.preventDefault();
-    const datos = {
-      nombre: name,
-      apellido: lastName,
-      causa: cause,
-      otro: `El usuario ${hasFines ? '' : 'no'} tiene multas`
+  useEffect(() => {
+    console.log('Se envió el formulario?', refetch);
+  }, [refetch]);
+
+  useEffect(() => {
+    setTimeout(() => console.log('Aceptas todas las coockies?'), 1000);
+  }, []);
+
+  const sendForm = async (e) => {
+    try {
+      e.preventDefault();
+      setIsLoading(true);
+      setError(errorInitialState);
+      const payload = {
+        nombre: name,
+        apellido: lastName,
+        causa: cause,
+        otro: `El usuario ${hasFines ? '' : 'no'} tiene multas`
+      }
+      const res = await axios({
+        method: 'post',
+        url: `${BASE_URL}/forms/`,
+        data: payload,
+      })
+      if (res.status === 201) {
+        setName('');
+        setLastName('');
+        setCause('');
+        setHasFines(!hasFines);
+        setRefetch(!refetch);
+      }
+    } catch (e) {
+      setError({
+        isError: true,
+        message: e?.message || 'Hubo un error al enviar el formulario',
+      })
+    } finally {
+      setTimeout(() => setIsLoading(false), 1000);
     }
-    console.log('Enviar datos al Backend', datos);
   }
 
   return (
-    <form onSubmit={sendForm}>
-      <InputText
-        value={name}
-        changeHandler={(e) => setName(e.target.value)}
-        label="Nombre: "
-        name="name"
-      />
+    <div>
+      {isLoading ? (
+        <Icon
+          name={faSpinner}
+          size={40}
+          rotate={true}
+          text='Su formulario está siendo enviado...'
+        />
+      ) : (
+        <>
+          {error.isError && (
+            <Icon
+              name={faCircleExclamation}
+              size={20}
+              color="red"
+              text={"Hubo un error"}
+            />
+          )}
 
-      <InputText
-        value={lastName}
-        changeHandler={(e) => setLastName(e.target.value)}
-        label="Apellido: "
-        name="last-name"
-      />
+          <Form send={sendForm}>
+            <InputText
+              value={name}
+              changeHandler={(e) => setName(e.target.value)}
+              label="Nombre: "
+              name="name"
+            />
 
-      <label htmlFor="cause">Motivo del Reclamo: </label>
-      <select name="cause" defaultValue="" onChange={(e) => setCause(e.target.value)}>
-        <option disabled value="">Eliga una causa: </option>
-        {possibleCauses.map((item, index) => (
-          <option key={index} value={item.value}>
-            {item.label}
-          </option>
-        ))}
-      </select>
+            <InputText
+              value={lastName}
+              changeHandler={(e) => setLastName(e.target.value)}
+              label="Apellido: "
+              name="last-name"
+            />
 
-      <label htmlFor="fines">¿Posee multas?: </label>
-      <input type="checkbox" name="fines" value={hasFines} onChange={e => setHasFines(!hasFines)} />
+            <Select
+              name="cause"
+              value={cause}
+              changeHandler={(e) => setCause(e.target.value)}
+              label="Motivo del Reclamo: "
+              placeholder="Eliga una causa: "
+              options={possibleCauses}
+            />
 
-      <input type='submit' value="Enviar" />
-    </form>
+            <Checkbox
+              value={hasFines}
+              changeHandler={(e) => setHasFines(!hasFines)}
+              label="¿Posee multas?:"
+              name="fines"
+            />
+
+            <SubmitButton value="Enviar" />
+          </Form>
+        </>
+      )}
+    </div>
   );
 }
 
