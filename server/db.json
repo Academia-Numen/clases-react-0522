@@ -15,32 +15,18 @@
       "id": 2
     },
     {
-      "nombre": "Laura",
-      "apellido": "Encinas",
-      "causa": "Poda y corta de Pasto",
-      "otro": "El usuario  tiene multas",
+      "nombre": "sfdsf",
+      "apellido": "sdf",
+      "causa": "Mantenimiento Espacios Públicos",
+      "otro": "El usuario no tiene multas",
       "id": 3
     },
     {
-      "nombre": "sdfs",
-      "apellido": "dsfdsf",
-      "causa": "Arreglo de Luminaria",
-      "otro": "El usuario  tiene multas",
-      "id": 4
-    },
-    {
-      "nombre": "dfsdf",
-      "apellido": "dsfsdf",
-      "causa": "Poda y corta de Pasto",
-      "otro": "El usuario  tiene multas",
-      "id": 5
-    },
-    {
-      "nombre": "xdfdsf",
-      "apellido": "sdfs",
+      "nombre": "sfdsdf",
+      "apellido": "sdfsdf",
       "causa": "Pavimento",
-      "otro": "El usuario  tiene multas",
-      "id": 6
+      "otro": "El usuario no tiene multas",
+      "id": 4
     }
   ]
 }
