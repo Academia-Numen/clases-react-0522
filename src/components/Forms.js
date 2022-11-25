@@ -3,14 +3,26 @@ import Icon from "./Icon";
 import centerItems from '../globalStyles';
 import Form from "./Form";
 import useFetchData from "../hooks/useFetchData";
+import useDeleteData from "../hooks/useDeleteData";
 
 const Forms = (props) => {
-    const { refetch, url } = props;
-    const { data, isLoading, error } = useFetchData(url, refetch);
+    const { refetch, refetchData, url, edit } = props;
+
+    const { 
+        data: forms, 
+        isLoading: isFormsLoading, 
+        error: formsError, 
+    } = useFetchData(url, refetch);
+
+    const { 
+        deleteForm, 
+        isLoading: isFormDeletionLoading, 
+        error: deleteFormError, 
+    } = useDeleteData(url, refetchData, 'Hubo un error al eliminar el formulario');
 
     return (
         <div style={{ padding: '0 1rem' }}>
-            {isLoading ? (
+            {isFormsLoading ? (
                 <Icon
                     name={faSpinner}
                     size={40}
@@ -19,16 +31,24 @@ const Forms = (props) => {
                 />
             ) : (
                 <div style={centerItems()}>
-                    {data.length !== 0 && (
+                    {forms.length !== 0 && (
                         <div style={centerItems()}>
                             <h2>Formularios Enviados:</h2>
-                            <ul style={{
+
+                            {isFormDeletionLoading ? (
+                                <Icon
+                                    name={faSpinner}
+                                    size={40}
+                                    rotate={true}
+                                    text='Eliminando Formulario...'
+                                />
+                            ) : <ul style={{
                                 ...centerItems('row'),
                                 paddingLeft: 0,
                                 gap: '1rem',
                                 flexWrap: 'wrap',
                             }}>
-                                {data.map(form => (
+                                {forms.map(form => (
                                     <Form
                                         key={form.id}
                                         id={form.id}
@@ -36,19 +56,33 @@ const Forms = (props) => {
                                         apellido={form.apellido}
                                         causa={form.causa}
                                         otro={form.otro}
+                                        deleteForm={deleteForm}
+                                        edit={edit}
                                     />
                                 ))}
-                            </ul>
+                            </ul>}
+
                         </div>
                     )}
 
                     {
-                        error.isError && (
+                        formsError.isError && (
                             <Icon
                                 name={faCircleExclamation}
                                 size={20}
                                 color="red"
-                                text={"Hubo un error"}
+                                text={formsError.message}
+                            />
+                        )
+                    }
+
+                    {
+                        deleteFormError.isError && (
+                            <Icon
+                                name={faCircleExclamation}
+                                size={20}
+                                color="red"
+                                text={deleteFormError.message}
                             />
                         )
                     }

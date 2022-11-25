@@ -1,69 +1,64 @@
-import { faCircleExclamation, faSpinner } from "@fortawesome/free-solid-svg-icons";
-import axios from "axios";
+import { faCircleCheck, faCircleExclamation, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
-import { BASE_URL } from "../App";
 import possibleCauses from "../data";
+import useFormSubmission from "../hooks/useFormSubmission";
 import Checkbox from "./Checkbox";
 import Icon from "./Icon";
 import InputText from "./InputText";
 import Select from "./Select";
 import SubmitButton from "./SubmitButton";
 
-const errorInitialState = { isError: false, message: '' };
-
 const NewForm = (props) => {
-    const { title, refetchData } = props;
+    const {
+        title,
+        method,
+        refetchData,
+        url,
+        errorMessage,
+        successMessage,
+        loadingMessage,
+    } = props;
     const [name, setName] = useState('');
     const [lastName, setLastName] = useState('');
     const [cause, setCause] = useState('');
     const [hasFines, setHasFines] = useState(false);
-    const [error, setError] = useState(errorInitialState);
-    const [isLoading, setIsLoading] = useState(false);
 
-    const sendForm = async (e) => {
-        try {
-            e.preventDefault();
-            setIsLoading(true);
-            setError(errorInitialState);
-            const payload = {
-                nombre: name,
-                apellido: lastName,
-                causa: cause,
-                otro: `El usuario ${hasFines ? '' : 'no'} tiene multas`
-            }
-            const res = await axios({
-                method: 'post',
-                url: `${BASE_URL}/forms/`,
-                data: payload,
-            })
-            if (res.status === 201) {
-                setName('');
-                setLastName('');
-                setCause('');
-                setHasFines(!hasFines);
-                refetchData();
-            }
-        } catch (e) {
-            setError({
-                isError: true,
-                message: e?.message || 'Hubo un error al enviar el formulario',
-            })
-        } finally {
-            setTimeout(() => setIsLoading(false), 1000);
-        }
+    const emptyState = () => {
+        setName('');
+        setLastName('');
+        setCause('');
+        setHasFines(!hasFines);
     }
+
+    const payload = {
+        nombre: name,
+        apellido: lastName,
+        causa: cause,
+        otro: `El usuario ${hasFines ? '' : 'no'} tiene multas`
+    };
+
+    const { submitHandler, isLoading, error, success } = useFormSubmission(
+        url,
+        method,
+        refetchData,
+        payload,
+        emptyState,
+        errorMessage,
+        successMessage,
+        loadingMessage,
+    )
 
     return (
         <div style={{ padding: '0 1rem' }}>
-            {isLoading ? (
+            {isLoading.isLoading ? (
                 <Icon
                     name={faSpinner}
                     size={40}
                     rotate={true}
-                    text='Su formulario está siendo enviado...'
+                    text={isLoading.message}
                 />
             ) : (
-                <form onSubmit={sendForm}>
+                <form onSubmit={submitHandler}>
 
                     <h2>{title}</h2>
 
@@ -108,7 +103,18 @@ const NewForm = (props) => {
                         name={faCircleExclamation}
                         size={20}
                         color="red"
-                        text={"Hubo un error"}
+                        text={error.message}
+                    />
+                )
+            }
+
+            {
+                success.wasSent && (
+                    <Icon
+                        name={faCircleCheck}
+                        size={20}
+                        color="green"
+                        text={success.message}
                     />
                 )
             }

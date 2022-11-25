@@ -8,25 +8,18 @@
       "id": 1
     },
     {
-      "nombre": "Esteban",
-      "apellido": "Quito",
+      "nombre": "dsfsd",
+      "apellido": "dsfds",
       "causa": "Mantenimiento Espacios Públicos",
       "otro": "El usuario  tiene multas",
       "id": 2
     },
     {
-      "nombre": "sfdsf",
-      "apellido": "sdf",
+      "nombre": "dsfds",
+      "apellido": "sdgs",
       "causa": "Mantenimiento Espacios Públicos",
-      "otro": "El usuario no tiene multas",
+      "otro": "El usuario  tiene multas",
       "id": 3
-    },
-    {
-      "nombre": "sfdsdf",
-      "apellido": "sdfsdf",
-      "causa": "Pavimento",
-      "otro": "El usuario no tiene multas",
-      "id": 4
     }
   ]
 }

@@ -1,18 +1,25 @@
+import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { useState } from 'react';
 import centerItems from '../globalStyles';
+import Icon from './Icon';
 
 const Form = (props) => {
-    const { id, nombre, apellido, causa, otro } = props;
+    const { id, nombre, apellido, causa, otro, deleteForm, edit } = props;
+
+    const [showButtons, setShowButtons] = useState(false);
 
     return (
         <li
             style={{
-                ...centerItems(),
+                ...centerItems('row'),
                 listStyle: 'none',
                 width: 300,
                 height: 245,
                 border: 'solid black 1px',
                 padding: '0 1rem',
             }}
+            onMouseEnter={() => setShowButtons(true)}
+            onMouseLeave={() => setShowButtons(false)}
         >
             <div>
                 <p>Formulario N°
@@ -31,6 +38,26 @@ const Form = (props) => {
                     <span style={{ fontWeight: '500' }}> {otro}</span>
                 </p>
             </div>
+
+            {showButtons && <div>
+                <Icon
+                    name={faTrash}
+                    size={20}
+                    text='Eliminar'
+                    color="red"
+                    clickable
+                    onClick={() => deleteForm(id)}
+                />
+                <Icon
+                    name={faEdit}
+                    size={20}
+                    text='Editar'
+                    color="blue"
+                    clickable
+                    onClick={() => edit(id)}
+                />
+               </div>
+            }
         </li>
     )
 }
