@@ -13,13 +13,9 @@
       "causa": "Mantenimiento Espacios Públicos",
       "otro": "El usuario  tiene multas",
       "id": 2
-    },
-    {
-      "nombre": "dsfds",
-      "apellido": "sdgs",
-      "causa": "Mantenimiento Espacios Públicos",
-      "otro": "El usuario  tiene multas",
-      "id": 3
     }
-  ]
+  ],
+  "login": {
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImZkc2ZzZGZzZCIsInBhc3MiOiJzZmRzZmQifQ.3LNpjdfqY8xmRxBMPpd2xf4-NLm4fPwjqT5Ykfs6X1Y"
+  }
 }

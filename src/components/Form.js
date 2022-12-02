@@ -1,5 +1,6 @@
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import { ThemeContext } from '../contexts/ThemeContext';
 import centerItems from '../globalStyles';
 import Icon from './Icon';
 
@@ -8,6 +9,8 @@ const Form = (props) => {
 
     const [showButtons, setShowButtons] = useState(false);
 
+    const { themeStyles } = useContext(ThemeContext);
+
     return (
         <li
             style={{
@@ -15,7 +18,7 @@ const Form = (props) => {
                 listStyle: 'none',
                 width: 300,
                 height: 245,
-                border: 'solid black 1px',
+                border: `solid ${themeStyles.color} 1px`,
                 padding: '0 1rem',
             }}
             onMouseEnter={() => setShowButtons(true)}
